@@ -1,382 +1,229 @@
+# 🏛️ CivicTrack - Crowdsourced Civic Issue Reporting & Governance Ecosystem
 
-## CivicTrack
-
-A simple full-stack web app for citizens to **report civic issues** and for administrators to **manage and resolve complaints**.
-
-This implementation uses:
-- **Frontend**: React + Vite + React Router + Tailwind CSS
-- **Backend**: Node.js (Express)
-- **Database**: MySQL (via `mysql2`/connection pool)
-
-> Note: The original spec mentioned MongoDB, but the current working implementation uses **MySQL**. All code and setup instructions below assume MySQL.
+**CivicTrack** is an end-to-end, multi-role civic management and fund-disbursement ecosystem built for Smart India Hackathon (SIH). It empowers citizens to report civic problems using GPS-tagged photos, enables registered contractors/vendors to bid transparently on tasks, and provides government ministries and central administrators with monitoring, fraud prevention, and financial disbursement workflows.
 
 ---
 
-## Features
-
-- **Citizen side**
-  - Home page with quick actions.
-  - **Report Issue** page:
-    - Upload photo (stored on server disk under `/uploads`).
-    - Auto-detected geolocation via HTML5 Geolocation API.
-    - Editable latitude/longitude.
-  - **Track Complaints** page:
-    - List of complaints for demo user `user_id = 1`.
-    - Shows photo, description, lat/lng, status, department and created time.
-    - Simple **Google Maps embed** for location preview.
-
-- **Admin side**
-  - Admin login (JWT based).
-  - Admin dashboard:
-    - Table of all complaints (photo, description, location, status, department).
-    - Filter by **status** and **department**.
-    - Update status and department.
-    - Reject/delete complaint (also removes photo file if present).
-    - Simple analytics cards (totals by status).
-
-- **Backend**
-  - REST APIs for complaints and admin auth.
-  - File upload with `multer`.
-  - JWT-based protection for admin complaint endpoints.
-  - MySQL DB with seed/demo data.
-
----
-
-## Folder structure
+## 📂 Project Directory Structure
 
 ```text
-civictrack-app/
-  client/         # React + Vite frontend
-  server/         # Node.js + Express backend
-```
-
-Key files:
-- `client/src/main.jsx` – app entry + routing.
-- `client/src/pages/*` – main screens.
-- `client/src/lib/api.js` – citizen-side API helpers.
-- `client/src/lib/adminApi.js` – admin API helpers.
-- `client/src/context/AdminAuthContext.jsx` – admin auth state (JWT).
-- `server/src/index.js` – Express app entry.
-- `server/src/routes/api.auth.js` – admin login route.
-- `server/src/routes/api.complaints.js` – complaints CRUD/filter.
-- `server/src/lib/db.js` – MySQL pool.
-- `server/db/seed.sql` – demo data for users/admins/complaints.
-
----
-
-## Prerequisites
-
-- **Node.js** 18+ (recommended).
-- **MySQL** server running locally (or reachable via network).
-
----
-
-## Backend setup (`server`)
-
-1. **Install dependencies**
-
-   ```bash
-   cd server
-   npm install
-   ```
-
-2. **Create MySQL database**
+CivicTrack/
+├── .gitignore
+├── README.md
+└── civictrack-app/
+    ├── package.json
+    ├── client/                  # React + Vite Frontend
+    │   ├── .env.example
+    │   ├── index.html
+    │   ├── package.json
+    │   ├── public/
+    │   │   └── civictrack-logo.png
+    │   └── src/
+    │       ├── ErrorBoundary.jsx
+    │       ├── components/
+    │       │   ├── BidForm.jsx
+    │       │   ├── BidsList.jsx
+    │       │   └── ProtectedRoute.jsx
+    │       ├── lib/
+    │       │   └── adminVendorApi.js
+    │       └── pages/
+    │           ├── AdminAnalytics.jsx
+    │           ├── AdminReportedVendorsPage.jsx
+    │           ├── Login.jsx
+    │           ├── MapPage.jsx
+    │           ├── MinistryDashboard.jsx
+    │           ├── ProfilePage.jsx
+    │           ├── UserDashboard.jsx
+    │           ├── VendorBiddingPage.jsx
+    │           ├── VendorDashboard.jsx
+    │           └── VendorRegister.jsx
+    └── server/                  # Express.js REST API Backend
+        ├── .env.example
+        ├── package.json
+        ├── test-login.js
+        ├── db/
+        │   ├── add_bids_table.sql
+        │   ├── add_profile_fields.sql
+        │   ├── add_role_column.sql
+        │   ├── add_statuses.sql
+        │   ├── add_vendor_applications.sql
+        │   └── add_vendors_table.sql
+        ├── src/
+        │   ├── db.js
+        │   ├── update_enum.js
+        │   ├── routes/
+        │   │   ├── api.admin.js
+        │   │   ├── api.admin.reset-password.js
+        │   │   ├── api.bids.js
+        │   │   ├── api.logs.js
+        │   │   ├── api.ministries.js
+        │   │   ├── api.notifications.js
+        │   │   ├── api.payments.js
+        │   │   ├── api.tasks.js
+        │   │   ├── api.users.js
+        │   │   └── api.vendors.js
+        │   └── scripts/
+        │       ├── check-vendor-db.js
+        │       ├── cloudnary-api.js
+        │       ├── create-bids-table.js
+        │       ├── create-reported-complaints.js
+        │       ├── create-vendor-table.js
+        │       ├── fix-activity-logs.js
+        │       ├── migrate-add-open-status.js
+        │       ├── migrate-bids.js
+        │       ├── migrate-completion-flow.js
+        │       ├── migrate-payments.js
+        │       ├── migrate-persistent-strikes.js
+        │       ├── migrate-tasks-columns.js
+        │       ├── migrate-user-confirmed.js
+        │       ├── test-open-complaints.js
+        │       └── test-vendor-query.js
+        └── uploads/             # Server-side stored image assets
+
+🌟 Core System Roles & Workflows
+👤 1. Citizen Portal
+GPS-Tagged Reporting: Citizens log civic complaints with live photo uploads and auto-filled location coordinates.
+
+Interactive Google Maps: View complaints geographically mapped via Google Maps API.
+
+Multi-Stage Task Verification: Complaints transition through states (Open → In Progress → Completed → User Confirmed → Archived). Citizens verify completed work with proof-of-work photos before task closure.
+
+🛠️ 2. Vendor Marketplace
+Bidding System: Registered vendors browse open tasks and submit bids specifying estimated budgets and timelines.
+
+Progress Tracking: Vendors upload progress updates and proof-of-work photos upon task execution.
+
+Re-Bidding Logic: Vendors receiving a "First Strike" warning can view feedback in their permanent history and submit a corrected bid tagged with a "Repeat Bidder" badge.
+
+🏛️ 3. Ministry Panel
+Smart Bid Selection Engine: Review and accept vendor bids based on cost and timeframe efficiency.
+
+Task Progression: Monitor physical progress updates submitted by assigned vendors.
+
+Fraud Escalation: Escalate suspicious or unrealistically low bids directly to the Central Admin.
+
+🛡️ 4. Admin Governance & Financial Treasury
+Two-Strike Rule Moderation:
+
+Strike 1 (Warn): Increments vendor warning count, archives the reported bid to an immutable history table, and re-opens the complaint for corrected bidding.
+
+Strike 2 (Ban): Automatically disables the 'Warn' action and enforces account termination for repeat offenders.
 
-   In your MySQL client:
-
-   ```sql
-   CREATE DATABASE civictrack;
-   USE civictrack;
-   ```
+Soft Delete Audit Preservation: Disassociates deleted vendor IDs from completed tasks while retaining historical government records.
 
-   Then create required tables (example schema):
+Segregation of Duties (SoD) Financial Disbursement: Enforces a secure bank-to-bank fund release mechanism where the Admin disburses funds to the vendor's bank account (Account No, IFSC) only after Ministry verification.
 
-   ```sql
-   -- users
-   CREATE TABLE IF NOT EXISTS users (
-     id INT AUTO_INCREMENT PRIMARY KEY,
-     name VARCHAR(255) NOT NULL,
-     email VARCHAR(255) UNIQUE NOT NULL,
-     password VARCHAR(255) NOT NULL
-   );
+🛠️ Tech Stack & Integrations
+Frontend: React.js, Tailwind CSS, Vite, Axios, React Router DOM
 
-   -- admins
-   CREATE TABLE IF NOT EXISTS admins (
-     id INT AUTO_INCREMENT PRIMARY KEY,
-     email VARCHAR(255) UNIQUE NOT NULL,
-     password VARCHAR(255) NOT NULL
-   );
+Backend: Node.js, Express.js (Modular Router Architecture)
 
-   -- complaints
-   CREATE TABLE IF NOT EXISTS complaints (
-     id INT AUTO_INCREMENT PRIMARY KEY,
-     user_id INT NOT NULL,
-     description TEXT,
-     photo_url VARCHAR(512),
-     latitude DOUBLE,
-     longitude DOUBLE,
-     status ENUM('Pending','In Progress','Resolved') DEFAULT 'Pending',
-     department VARCHAR(255),
-     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-     FOREIGN KEY (user_id) REFERENCES users(id)
-   );
-   ```
+Database: MySQL (mysql2 connection pool with async/await)
 
-3. **Environment variables**
+Security & Media: JWT Authentication, Role-Based Access Control (RBAC), Multer File Handling, Google Maps API
 
-   Copy the example file and fill in values:
+🚀 Installation & Local Setup
+Prerequisites
+Node.js (v18+ recommended)
 
-   ```bash
-   cd server
-   cp .env.example .env
-   ```
+MySQL Server (Running locally or on cloud instance)
 
-   `server/.env.example` contains:
+1. Backend Setup (server)
 
-   ```text
-   PORT=3000
-   DB_HOST=localhost
-   DB_PORT=3306
-   DB_USER=root
-   DB_PASSWORD=your_password_here
-   DB_NAME=civictrack
+cd civictrack-app/server
+npm install
 
-   # secret used to sign admin JWTs (change in production!)
-   JWT_SECRET=dev-secret-change-me
+Configure your environment variables by creating a .env file in civictrack-app/server/:
 
-   # folder for uploaded images (served at /uploads)
-   UPLOAD_DIR=uploads
-   ```
+PORT=3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_mysql_password
+DB_NAME=civictrack
+JWT_SECRET=your_dev_jwt_secret
+UPLOAD_DIR=uploads
 
-4. **Seed demo data**
+Execute SQL database scripts and migration runners:
 
-   From `server/`:
+# Initialize DB tables
+node src/scripts/migrate-bids.js
+node src/scripts/migrate-payments.js
+node src/scripts/migrate-persistent-strikes.js
+node src/scripts/migrate-completion-flow.js
 
-   ```bash
-   # Make sure DB_* vars in .env are correct first
-   npm run db:seed
-   ```
+# Start backend server
+npm start
 
-   This uses `server/db/seed.sql` to insert:
-   - User: `Akshat <akshat@example.com>`
-   - Admin: `akshat <akshatvision7@gmail.com>` / `Akshat@2004`
-   - Some sample complaints.
+The server will run on http://localhost:3000.
 
-5. **Run backend in dev mode**
+2. Frontend Setup (client)
 
-   ```bash
-   cd server
-   npm run dev
-   ```
+cd civictrack-app/client
+npm install
 
-   The server will listen on **http://localhost:3000**.
+Configure client/.env:
 
-   - Health check: `GET http://localhost:3000/health`
-   - Uploaded images are served from `http://localhost:3000/uploads/...`.
+VITE_API_BASE=http://localhost:3000
 
----
+Start Vite development server:
+npm run dev
 
-## Frontend setup (`client`)
+The client app will launch at http://localhost:5173.
 
-1. **Install dependencies**
+📡 API Reference Overview
+Base URL: http://localhost:3000
 
-   ```bash
-   cd client
-   npm install
-   ```
+🔓 Authentication & Users
+POST /api/users/login - User/Vendor/Ministry authentication.
 
-2. **Environment variables (optional)**
+POST /api/users/register - New user/vendor registration.
 
-   By default the client talks to `http://localhost:3000`.  
-   To override:
+POST /api/admin/login - Admin authentication token generation.
 
-   ```bash
-   cp .env.example .env
-   ```
+📝 Complaints & Bidding
+POST /api/tasks - Submit new complaint (Multipart form-data with photo, GPS, and description).
 
-   `client/.env.example`:
+GET /api/tasks/open - Retrieve all open tasks for vendor bidding.
 
-   ```text
-   # Base URL of backend API
-   VITE_API_BASE=http://localhost:3000
-   ```
+POST /api/bids - Submit a new vendor bid on an open task.
 
-3. **Run frontend**
+GET /api/bids/task/:taskId - Retrieve all vendor bids for a specific task.
 
-   ```bash
-   cd client
-   npm run dev
-   ```
+PATCH /api/bids/approve - Ministry bid acceptance route.
 
-   Vite will show a URL like `http://localhost:5173/`.
+🛡️ Moderation & Governance
+POST /api/admin/warn - Execute Strike 1 warning on reported vendor bid.
 
-4. **Open the app**
+DELETE /api/admin/vendor/:id - Execute Strike 2 account ban with soft-delete history preservation.
 
-   - Citizen side: `http://localhost:5173/`
-   - Admin login: `http://localhost:5173/admin/login`
+💳 Financial Disbursements
+GET /api/payments/pending - Fetch completed tasks awaiting Ministry payment forwarding.
 
----
+POST /api/payments/disburse - Single-click Admin bank-to-bank transaction execution.
 
-## API reference
+🔄 Lifecycle & State Machine Sketch
 
-Base URL (backend): `http://localhost:3000`
-
-- **POST** `/api/complaints`
-  - Citizen submits complaint (multipart/form-data).
-  - Body:
-    - `user_id` (string/int, required)
-    - `description` (string, optional if photo present)
-    - `latitude` (number, optional)
-    - `longitude` (number, optional)
-    - `department` (string, optional)
-    - `photo` (file, optional)
-  - Response: created complaint JSON.
-
-- **GET** `/api/complaints/user/:id`
-  - Citizen gets their own complaints list.
-  - Auth: none in this demo (uses numeric `user_id`).
-
-- **GET** `/api/complaints`
-  - Admin lists all complaints.
-  - Query params:
-    - `status` (`Pending` | `In Progress` | `Resolved`, optional)
-    - `department` (string, optional)
-  - Auth: `Authorization: Bearer <admin_jwt>`.
-
-- **PUT** `/api/complaints/:id`
-  - Admin updates `status` and/or `department`.
-  - Body (JSON):
-    - `status` (`Pending` | `In Progress` | `Resolved`, optional)
-    - `department` (string, optional)
-  - Auth: `Authorization: Bearer <admin_jwt>`.
-
-- **DELETE** `/api/complaints/:id`
-  - Admin rejects/deletes complaint (and its photo file if any).
-  - Auth: `Authorization: Bearer <admin_jwt>`.
-
-- **POST** `/api/auth/admin/login`
-  - Admin login.
-  - Body (JSON):
-    - `email`
-    - `password`
-  - Response:
-    - `{ "token": "<jwt_here>" }`
-
----
-
-## Example curl commands
-
-### Health check
-
-```bash
-curl http://localhost:3000/health
-```
-
-### Admin login
-
-```bash
-curl -X POST http://localhost:3000/api/auth/admin/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@example.com","password":"secret"}'
-```
-
-### Submit complaint (citizen, with description only)
-
-```bash
-curl -X POST http://localhost:3000/api/complaints \
-  -F "user_id=1" \
-  -F "description=Pothole near sector 18 gate" \
-  -F "latitude=28.626" \
-  -F "longitude=77.210"
-```
-
-### Submit complaint with photo
-
-```bash
-curl -X POST http://localhost:3000/api/complaints \
-  -F "user_id=1" \
-  -F "description=Streetlight not working" \
-  -F "photo=@/path/to/photo.jpg"
-```
-
-### List complaints for user
-
-```bash
-curl http://localhost:3000/api/complaints/user/1
-```
-
-### Admin: list all complaints
-
-```bash
-curl "http://localhost:3000/api/complaints?status=Pending" \
-  -H "Authorization: Bearer <your_admin_jwt>"
-```
-
-### Admin: update complaint
-
-```bash
-curl -X PUT http://localhost:3000/api/complaints/1 \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <your_admin_jwt>" \
-  -d '{"status":"Resolved","department":"Roads"}'
-```
-
-### Admin: delete complaint
-
-```bash
-curl -X DELETE http://localhost:3000/api/complaints/1 \
-  -H "Authorization: Bearer <your_admin_jwt>"
-```
-
----
-
-## Screen flow (ASCII sketch)
-
-```text
-Citizen flow
-============
-
- [Home (/)]
-    |
-    |-- "Report an Issue" --> [Report Issue (/report)]
-    |                             |
-    |                             |-- submit form
-    |                             v
-    |                        [Success message]
-    |
-    |-- "Track Complaints" --> [Track Complaints (/track)]
-                                  - list of user's complaints
-                                  - status badges (Pending / In Progress / Resolved)
-                                  - map snippet for each complaint
-
-
-Admin flow
-==========
-
- [Admin Login (/admin/login)]
-        |
-        |-- valid credentials
-        v
- [Admin Dashboard (/admin)]
-        |
-        |-- filters: status / department
-        |-- table:
-        |     - complaint ID, photo, description
-        |     - location (lat/lng + map)
-        |     - status, department (editable)
-        |     - actions: Save / Reject
-        |
-        `-- (optional analytics)
-              - cards: total, pending, in progress, resolved
-```
-
----
-
-## Notes / TODOs
-
-- For production, you **must**:
-  - Use a strong `JWT_SECRET`.
-  - Secure the API with proper CORS and HTTPS.
-  - Replace demo user-id based tracking with real user auth/registration.
-  - Consider moving image storage to S3/Cloudinary or similar.
-
+[ Citizen Reports Issue (Open) ]
+                │
+                ▼
+  [ Vendors Submit Competitive Bids ]
+                │
+                ▼
+  [ Ministry Selects Optimal Bid ]
+                │
+                ├──────────────────────────────────────┐
+                ▼                                      ▼
+  [ Task In Progress (Vendor Uploads Proof) ]  [ Suspected Fraud Reported ]
+                │                                      │
+                ▼                                      ▼
+  [ Ministry Verifies Completion ]            [ Admin Two-Strike Engine ]
+                │                                ├─────────────┴────────────┐
+                ▼                                ▼                          ▼
+  [ Citizen Confirms Resolution ]       [ Strike 1: Warning ]     [ Strike 2: Ban ]
+                │                       (Re-bid / History Log)   (Account Removal)
+                ▼
+  [ Admin Finance Disburses Funds ]
+                │
+                ▼
+  [ Archived in Read-Only History ]
