@@ -1,31 +1,471 @@
-# 🏛️ CivicTrack - Crowdsourced Civic Issue Reporting & Governance Ecosystem
+# 🏛️ CivicTrack
 
-**CivicTrack** is an end-to-end, multi-role civic management and fund-disbursement ecosystem built for Smart India Hackathon (SIH). It empowers citizens to report civic problems using GPS-tagged photos, enables registered contractors/vendors to bid transparently on tasks, and provides government ministries and central administrators with monitoring, fraud prevention, and financial disbursement workflows.
+### Crowdsourced Civic Issue Reporting, Transparent Vendor Bidding & Governance Platform
+
+<p align="center">
+  <img src="civictrack-app/client/public/civictrack-logo.png" alt="CivicTrack Logo" width="180"/>
+</p>
+
+<p align="center">
+  <strong>Report. Resolve. Verify. Govern.</strong>
+</p>
+
+<p align="center">
+  A multi-role civic governance ecosystem that connects citizens, vendors, ministries, and administrators through a transparent digital workflow.
+</p>
+
+<p align="center">
+  <a href="#-features">Features</a> •
+  <a href="#-system-architecture">Architecture</a> •
+  <a href="#-workflow">Workflow</a> •
+  <a href="#-installation--setup">Setup</a> •
+  <a href="#-api-overview">API</a> •
+  <a href="#-future-enhancements">Future Scope</a>
+</p>
 
 ---
 
-## 📂 Project Directory Structure
+## 📌 Overview
+
+**CivicTrack** is an end-to-end civic issue management and governance platform designed to make the process of reporting, assigning, executing, verifying, and financially closing civic complaints more **transparent, accountable, and traceable**.
+
+The platform creates a digital bridge between:
+
+* 👤 **Citizens** — Report civic issues and verify their resolution
+* 🛠️ **Vendors / Contractors** — Discover tasks and submit competitive bids
+* 🏛️ **Ministries** — Evaluate bids, assign work, and verify progress
+* 🛡️ **Central Administrators** — Manage vendors, detect suspicious activity, and control financial disbursements
+
+Instead of treating a complaint as a simple ticket, CivicTrack manages the **complete lifecycle of a civic issue**, from the initial GPS-tagged report to final citizen verification and fund disbursement.
+
+---
+
+# 🎯 Problem Statement
+
+Traditional civic complaint systems often suffer from:
+
+* Lack of transparency in task allocation
+* Limited visibility into complaint progress
+* Difficulty verifying whether work was actually completed
+* Unclear vendor selection processes
+* Potentially fraudulent or unrealistic bids
+* Weak accountability for repeated vendor misconduct
+* Limited auditability of financial transactions
+
+### 💡 CivicTrack's Approach
+
+CivicTrack introduces a structured workflow:
+
+```text
+Citizen Report
+      ↓
+Open Civic Task
+      ↓
+Competitive Vendor Bidding
+      ↓
+Ministry Evaluation
+      ↓
+Vendor Assignment
+      ↓
+Progress + Proof Upload
+      ↓
+Ministry Verification
+      ↓
+Citizen Confirmation
+      ↓
+Admin Fund Disbursement
+      ↓
+Archived Audit History
+```
+
+Every important stage leaves a traceable record.
+
+---
+
+# ✨ Key Features
+
+## 👤 Citizen Portal
+
+### 📍 GPS-Tagged Issue Reporting
+
+Citizens can report civic problems by providing:
+
+* Issue description
+* Live/current location
+* GPS coordinates
+* Supporting photographs
+
+This helps authorities understand **what happened and where it happened**.
+
+### 🗺️ Interactive Complaint Map
+
+Civic issues can be visualized geographically through Google Maps integration.
+
+Users can identify complaints based on their location and understand the distribution of civic problems.
+
+### ✅ Citizen Verification
+
+A task does not immediately become permanently closed after vendor completion.
+
+The workflow includes:
+
+```text
+Open
+ ↓
+In Progress
+ ↓
+Completed
+ ↓
+User Confirmed
+ ↓
+Archived
+```
+
+Citizens can provide proof-of-resolution photos before the issue is finally closed.
+
+---
+
+# 🛠️ Vendor Marketplace
+
+## 💰 Competitive Bidding
+
+Registered vendors can browse available civic tasks and submit bids containing:
+
+* Estimated project cost
+* Expected completion timeline
+* Relevant task information
+
+This creates a structured bidding environment for task allocation.
+
+## 📈 Progress Tracking
+
+After receiving a task, vendors can submit:
+
+* Work progress updates
+* Proof-of-work photographs
+* Completion evidence
+
+This allows ministries to monitor execution rather than relying only on a final status update.
+
+## 🔄 Re-Bidding Mechanism
+
+CivicTrack introduces a vendor accountability workflow.
+
+If a suspicious or problematic bid receives a **Strike 1 warning**, the vendor can:
+
+1. View the feedback
+2. Review the previous bid history
+3. Submit a corrected bid
+4. Receive a `Repeat Bidder` indicator
+
+This creates an opportunity for correction while maintaining historical accountability.
+
+---
+
+# 🏛️ Ministry Dashboard
+
+The Ministry panel acts as the operational decision-making layer.
+
+### Smart Bid Evaluation
+
+Ministry officials can compare vendor bids using factors such as:
+
+* Cost
+* Estimated completion time
+* Vendor history
+* Task suitability
+
+The ministry can then approve the most appropriate bid.
+
+### 📊 Task Monitoring
+
+Ministries can monitor:
+
+```text
+Assigned Vendor
+      ↓
+Work Started
+      ↓
+Progress Updates
+      ↓
+Proof of Work
+      ↓
+Completion Verification
+```
+
+### 🚨 Fraud Escalation
+
+Suspicious or unrealistic bids can be escalated to the Central Administration for further action.
+
+---
+
+# 🛡️ Central Administration & Governance
+
+The Admin panel provides centralized control over vendor governance, audit history, and financial workflows.
+
+## ⚠️ Two-Strike Vendor Moderation
+
+CivicTrack implements a structured vendor moderation system.
+
+### Strike 1 — Warning
+
+When a vendor is reported:
+
+```text
+Reported Bid
+     ↓
+Admin Review
+     ↓
+Strike 1
+     ↓
+Bid Archived
+     ↓
+Complaint Re-opened
+     ↓
+Vendor Can Re-Bid
+```
+
+The original bid remains preserved in historical records.
+
+### Strike 2 — Ban
+
+Repeated violations result in:
+
+```text
+Second Violation
+      ↓
+Vendor Account Disabled
+      ↓
+Future Warning Action Restricted
+      ↓
+Historical Records Preserved
+```
+
+This prevents repeated abuse while maintaining an auditable history.
+
+---
+
+# 💳 Financial Disbursement
+
+CivicTrack separates **task verification** from **financial disbursement**.
+
+Funds are released only after the required verification workflow has been completed.
+
+### Financial Flow
+
+```text
+Vendor Completes Task
+        ↓
+Ministry Verifies Completion
+        ↓
+Payment Becomes Eligible
+        ↓
+Admin Reviews Payment
+        ↓
+Bank Details Verified
+        ↓
+Fund Disbursement
+        ↓
+Transaction Recorded
+```
+
+The system maintains separation of responsibilities to support a **Segregation of Duties (SoD)** approach.
+
+---
+
+# 🔐 Security & Accountability
+
+CivicTrack is designed around role-based access and auditability.
+
+### Security Components
+
+* 🔑 JWT-based authentication
+* 👥 Role-Based Access Control (RBAC)
+* 🛡️ Protected frontend routes
+* 🔒 Role-specific backend APIs
+* 📋 Activity/audit logging
+* 🗃️ Historical record preservation
+* 🧾 Soft-delete approach for vendor records
+* 📸 Proof-of-work media storage
+
+### Supported Roles
+
+```text
+                CivicTrack
+                    │
+        ┌───────────┼───────────┐
+        │           │           │
+     Citizen      Vendor     Ministry
+                                │
+                                │
+                              Admin
+```
+
+Each role receives access only to the functionality required for its responsibilities.
+
+---
+
+# 🧩 System Architecture
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│                       CIVICTRACK                             │
+└──────────────────────────────────────────────────────────────┘
+
+                         FRONTEND
+┌──────────────────────────────────────────────────────────────┐
+│ React.js + Vite + Tailwind CSS                              │
+│                                                              │
+│ Citizen │ Vendor │ Ministry │ Admin Dashboards               │
+└───────────────────────────────┬──────────────────────────────┘
+                                │
+                         REST API / Axios
+                                │
+                                ▼
+                         BACKEND SERVER
+┌──────────────────────────────────────────────────────────────┐
+│ Node.js + Express.js                                        │
+│                                                              │
+│ Authentication │ Tasks │ Bids │ Vendors │ Payments           │
+│ Ministries │ Admin │ Notifications │ Logs                    │
+└───────────────────────────────┬──────────────────────────────┘
+                                │
+                         mysql2 Connection Pool
+                                │
+                                ▼
+                            MySQL DB
+┌──────────────────────────────────────────────────────────────┐
+│ Users │ Tasks │ Vendors │ Bids │ Payments │ Logs             │
+│ Reports │ Notifications │ Historical Records                 │
+└──────────────────────────────────────────────────────────────┘
+
+             External Integrations
+        ┌──────────────┬──────────────┐
+        │ Google Maps  │ File Storage │
+        │     API      │   / Uploads  │
+        └──────────────┴──────────────┘
+```
+
+---
+
+# 🔄 Complete Issue Lifecycle
+
+The complete CivicTrack lifecycle can be represented as:
+
+```text
+┌─────────────────────┐
+│ Citizen Reports     │
+│ Civic Issue         │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│      OPEN           │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Vendor Bidding      │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Ministry Selects    │
+│ Optimal Bid         │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│    IN PROGRESS      │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Vendor Uploads      │
+│ Progress + Proof    │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│     COMPLETED       │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Ministry Verifies   │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│   USER CONFIRMED    │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Admin Disburses     │
+│ Funds               │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│      ARCHIVED       │
+└─────────────────────┘
+```
+
+---
+
+# 🧱 Tech Stack
+
+| Layer           | Technology       |
+| --------------- | ---------------- |
+| Frontend        | React.js         |
+| Build Tool      | Vite             |
+| Styling         | Tailwind CSS     |
+| Routing         | React Router DOM |
+| HTTP Client     | Axios            |
+| Backend         | Node.js          |
+| API Framework   | Express.js       |
+| Database        | MySQL            |
+| Database Driver | mysql2           |
+| Authentication  | JWT              |
+| Authorization   | RBAC             |
+| File Upload     | Multer           |
+| Maps            | Google Maps API  |
+| Version Control | Git / GitHub     |
+
+---
+
+# 📂 Project Structure
 
 ```text
 CivicTrack/
+│
 ├── .gitignore
 ├── README.md
+│
 └── civictrack-app/
+    │
     ├── package.json
-    ├── client/                  # React + Vite Frontend
+    │
+    ├── client/
     │   ├── .env.example
     │   ├── index.html
     │   ├── package.json
+    │   │
     │   ├── public/
     │   │   └── civictrack-logo.png
+    │   │
     │   └── src/
     │       ├── ErrorBoundary.jsx
+    │       │
     │       ├── components/
     │       │   ├── BidForm.jsx
     │       │   ├── BidsList.jsx
     │       │   └── ProtectedRoute.jsx
+    │       │
     │       ├── lib/
     │       │   └── adminVendorApi.js
+    │       │
     │       └── pages/
     │           ├── AdminAnalytics.jsx
     │           ├── AdminReportedVendorsPage.jsx
@@ -37,10 +477,12 @@ CivicTrack/
     │           ├── VendorBiddingPage.jsx
     │           ├── VendorDashboard.jsx
     │           └── VendorRegister.jsx
-    └── server/                  # Express.js REST API Backend
+    │
+    └── server/
         ├── .env.example
         ├── package.json
         ├── test-login.js
+        │
         ├── db/
         │   ├── add_bids_table.sql
         │   ├── add_profile_fields.sql
@@ -48,9 +490,11 @@ CivicTrack/
         │   ├── add_statuses.sql
         │   ├── add_vendor_applications.sql
         │   └── add_vendors_table.sql
+        │
         ├── src/
         │   ├── db.js
         │   ├── update_enum.js
+        │   │
         │   ├── routes/
         │   │   ├── api.admin.js
         │   │   ├── api.admin.reset-password.js
@@ -62,6 +506,7 @@ CivicTrack/
         │   │   ├── api.tasks.js
         │   │   ├── api.users.js
         │   │   └── api.vendors.js
+        │   │
         │   └── scripts/
         │       ├── check-vendor-db.js
         │       ├── cloudnary-api.js
@@ -78,152 +523,408 @@ CivicTrack/
         │       ├── migrate-user-confirmed.js
         │       ├── test-open-complaints.js
         │       └── test-vendor-query.js
-        └── uploads/             # Server-side stored image assets
+        │
+        └── uploads/
+```
 
-🌟 Core System Roles & Workflows
-👤 1. Citizen Portal
-GPS-Tagged Reporting: Citizens log civic complaints with live photo uploads and auto-filled location coordinates.
+---
 
-Interactive Google Maps: View complaints geographically mapped via Google Maps API.
+# 🚀 Installation & Setup
 
-Multi-Stage Task Verification: Complaints transition through states (Open → In Progress → Completed → User Confirmed → Archived). Citizens verify completed work with proof-of-work photos before task closure.
+## Prerequisites
 
-🛠️ 2. Vendor Marketplace
-Bidding System: Registered vendors browse open tasks and submit bids specifying estimated budgets and timelines.
+Make sure the following are installed:
 
-Progress Tracking: Vendors upload progress updates and proof-of-work photos upon task execution.
+* Node.js `18+`
+* npm
+* MySQL `8+`
+* Git
 
-Re-Bidding Logic: Vendors receiving a "First Strike" warning can view feedback in their permanent history and submit a corrected bid tagged with a "Repeat Bidder" badge.
+---
 
-🏛️ 3. Ministry Panel
-Smart Bid Selection Engine: Review and accept vendor bids based on cost and timeframe efficiency.
+## 1️⃣ Clone the Repository
 
-Task Progression: Monitor physical progress updates submitted by assigned vendors.
+```bash
+git clone <YOUR_GITHUB_REPOSITORY_URL>
 
-Fraud Escalation: Escalate suspicious or unrealistically low bids directly to the Central Admin.
+cd CivicTrack
+```
 
-🛡️ 4. Admin Governance & Financial Treasury
-Two-Strike Rule Moderation:
+---
 
-Strike 1 (Warn): Increments vendor warning count, archives the reported bid to an immutable history table, and re-opens the complaint for corrected bidding.
+## 2️⃣ Backend Setup
 
-Strike 2 (Ban): Automatically disables the 'Warn' action and enforces account termination for repeat offenders.
+Navigate to the server:
 
-Soft Delete Audit Preservation: Disassociates deleted vendor IDs from completed tasks while retaining historical government records.
-
-Segregation of Duties (SoD) Financial Disbursement: Enforces a secure bank-to-bank fund release mechanism where the Admin disburses funds to the vendor's bank account (Account No, IFSC) only after Ministry verification.
-
-🛠️ Tech Stack & Integrations
-Frontend: React.js, Tailwind CSS, Vite, Axios, React Router DOM
-
-Backend: Node.js, Express.js (Modular Router Architecture)
-
-Database: MySQL (mysql2 connection pool with async/await)
-
-Security & Media: JWT Authentication, Role-Based Access Control (RBAC), Multer File Handling, Google Maps API
-
-🚀 Installation & Local Setup
-Prerequisites
-Node.js (v18+ recommended)
-
-MySQL Server (Running locally or on cloud instance)
-
-1. Backend Setup (server)
-
+```bash
 cd civictrack-app/server
+```
+
+Install dependencies:
+
+```bash
 npm install
+```
 
-Configure your environment variables by creating a .env file in civictrack-app/server/:
+Create a `.env` file:
 
+```env
 PORT=3000
+
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=your_mysql_password
 DB_NAME=civictrack
+
 JWT_SECRET=your_dev_jwt_secret
+
 UPLOAD_DIR=uploads
+```
 
-Execute SQL database scripts and migration runners:
+Create the MySQL database:
 
-# Initialize DB tables
+```sql
+CREATE DATABASE civictrack;
+```
+
+Run the required migrations:
+
+```bash
 node src/scripts/migrate-bids.js
 node src/scripts/migrate-payments.js
 node src/scripts/migrate-persistent-strikes.js
 node src/scripts/migrate-completion-flow.js
+```
 
-# Start backend server
+Start the backend:
+
+```bash
 npm start
+```
 
-The server will run on http://localhost:3000.
+Backend:
 
-2. Frontend Setup (client)
+```text
+http://localhost:3000
+```
 
+---
+
+# 💻 Frontend Setup
+
+Open a new terminal:
+
+```bash
 cd civictrack-app/client
+```
+
+Install dependencies:
+
+```bash
 npm install
+```
 
-Configure client/.env:
+Create `.env`:
 
+```env
 VITE_API_BASE=http://localhost:3000
+```
 
-Start Vite development server:
+Start the development server:
+
+```bash
 npm run dev
+```
 
-The client app will launch at http://localhost:5173.
+Frontend:
 
-📡 API Reference Overview
-Base URL: http://localhost:3000
+```text
+http://localhost:5173
+```
 
-🔓 Authentication & Users
-POST /api/users/login - User/Vendor/Ministry authentication.
+---
 
-POST /api/users/register - New user/vendor registration.
+# 📡 API Overview
 
-POST /api/admin/login - Admin authentication token generation.
+Base URL:
 
-📝 Complaints & Bidding
-POST /api/tasks - Submit new complaint (Multipart form-data with photo, GPS, and description).
+```text
+http://localhost:3000
+```
 
-GET /api/tasks/open - Retrieve all open tasks for vendor bidding.
+## 🔐 Authentication
 
-POST /api/bids - Submit a new vendor bid on an open task.
+| Method | Endpoint              | Description                |
+| ------ | --------------------- | -------------------------- |
+| POST   | `/api/users/login`    | User/Vendor/Ministry login |
+| POST   | `/api/users/register` | Register a new user/vendor |
+| POST   | `/api/admin/login`    | Admin authentication       |
 
-GET /api/bids/task/:taskId - Retrieve all vendor bids for a specific task.
+---
 
-PATCH /api/bids/approve - Ministry bid acceptance route.
+## 📝 Tasks & Complaints
 
-🛡️ Moderation & Governance
-POST /api/admin/warn - Execute Strike 1 warning on reported vendor bid.
+| Method | Endpoint          | Description               |
+| ------ | ----------------- | ------------------------- |
+| POST   | `/api/tasks`      | Create a civic complaint  |
+| GET    | `/api/tasks/open` | Retrieve open tasks       |
+| PATCH  | `/api/tasks/...`  | Update task status        |
+| GET    | `/api/tasks/...`  | Retrieve task information |
 
-DELETE /api/admin/vendor/:id - Execute Strike 2 account ban with soft-delete history preservation.
+---
 
-💳 Financial Disbursements
-GET /api/payments/pending - Fetch completed tasks awaiting Ministry payment forwarding.
+## 💰 Vendor Bidding
 
-POST /api/payments/disburse - Single-click Admin bank-to-bank transaction execution.
+| Method | Endpoint                 | Description              |
+| ------ | ------------------------ | ------------------------ |
+| POST   | `/api/bids`              | Submit vendor bid        |
+| GET    | `/api/bids/task/:taskId` | Retrieve bids for a task |
+| PATCH  | `/api/bids/approve`      | Approve selected bid     |
 
-🔄 Lifecycle & State Machine Sketch
+---
 
-[ Citizen Reports Issue (Open) ]
-                │
-                ▼
-  [ Vendors Submit Competitive Bids ]
-                │
-                ▼
-  [ Ministry Selects Optimal Bid ]
-                │
-                ├──────────────────────────────────────┐
-                ▼                                      ▼
-  [ Task In Progress (Vendor Uploads Proof) ]  [ Suspected Fraud Reported ]
-                │                                      │
-                ▼                                      ▼
-  [ Ministry Verifies Completion ]            [ Admin Two-Strike Engine ]
-                │                                ├─────────────┴────────────┐
-                ▼                                ▼                          ▼
-  [ Citizen Confirms Resolution ]       [ Strike 1: Warning ]     [ Strike 2: Ban ]
-                │                       (Re-bid / History Log)   (Account Removal)
-                ▼
-  [ Admin Finance Disburses Funds ]
-                │
-                ▼
-  [ Archived in Read-Only History ]
+## 🛡️ Administration
+
+| Method | Endpoint                | Description           |
+| ------ | ----------------------- | --------------------- |
+| POST   | `/api/admin/warn`       | Issue vendor Strike 1 |
+| DELETE | `/api/admin/vendor/:id` | Disable/ban vendor    |
+
+---
+
+## 💳 Payments
+
+| Method | Endpoint                 | Description               |
+| ------ | ------------------------ | ------------------------- |
+| GET    | `/api/payments/pending`  | Retrieve pending payments |
+| POST   | `/api/payments/disburse` | Execute fund disbursement |
+
+---
+
+# 🗃️ Data & Audit Model
+
+CivicTrack maintains historical records to improve accountability.
+
+Important data domains include:
+
+```text
+Users
+ ├── Citizens
+ ├── Vendors
+ ├── Ministries
+ └── Administrators
+
+Tasks
+ ├── Complaints
+ ├── Status
+ ├── Location
+ └── Proof Images
+
+Bids
+ ├── Vendor
+ ├── Cost
+ ├── Timeline
+ ├── Status
+ └── History
+
+Payments
+ ├── Task
+ ├── Vendor
+ ├── Amount
+ ├── Bank Details
+ └── Disbursement Status
+
+Audit
+ ├── Activity Logs
+ ├── Vendor Reports
+ ├── Strike History
+ └── Historical Records
+```
+
+---
+
+# 📸 Screenshots / Demo
+
+> Add screenshots or GIFs of the application here.
+
+### 👤 Citizen Dashboard
+
+```text
+[ Add Screenshot ]
+```
+
+### 🗺️ Civic Issue Map
+
+```text
+[ Add Screenshot ]
+```
+
+### 🛠️ Vendor Dashboard
+
+```text
+[ Add Screenshot ]
+```
+
+### 🏛️ Ministry Dashboard
+
+```text
+[ Add Screenshot ]
+```
+
+### 🛡️ Admin Analytics
+
+```text
+[ Add Screenshot ]
+```
+
+### 💳 Payment Disbursement
+
+```text
+[ Add Screenshot ]
+```
+
+---
+
+# 🎥 Project Demo
+
+Add your project demonstration video here:
+
+```text
+[▶️ Watch CivicTrack Demo]
+```
+
+For GitHub, you can upload the demo video to GitHub Releases/Issues or add a YouTube/Loom link.
+
+---
+
+# 🧠 Design Principles
+
+CivicTrack is designed around five core principles:
+
+### 1. Transparency
+
+Vendor bidding and task progression are digitally recorded.
+
+### 2. Accountability
+
+Vendor strikes and historical records provide traceability.
+
+### 3. Verification
+
+Completion requires evidence and multi-stage verification.
+
+### 4. Separation of Duties
+
+Operational verification and financial disbursement are handled through separate roles.
+
+### 5. Citizen Participation
+
+Citizens remain involved even after a task is assigned, including final resolution confirmation.
+
+---
+
+# 🔮 Future Enhancements
+
+Potential improvements for future versions include:
+
+* 🤖 AI-based fraud and anomaly detection
+* 📊 Predictive civic issue analytics
+* 🛰️ Satellite/geospatial analysis
+* 📱 Dedicated Android/iOS application
+* 🔔 Real-time notifications
+* 💳 Integration with government payment gateways
+* 🧠 AI-assisted vendor scoring
+* 📈 Advanced ministry-level analytics
+* 🗺️ Heatmaps for high-frequency civic issues
+* 🔍 Duplicate complaint detection
+* 🌐 Multi-language citizen interface
+* 📜 Blockchain-backed audit trails for critical transactions
+
+---
+
+# 🏆 Smart India Hackathon
+
+CivicTrack was designed as a **Smart India Hackathon (SIH)** solution focused on improving civic issue reporting, transparent task allocation, vendor accountability, and governance workflows.
+
+The platform demonstrates how a single digital ecosystem can connect:
+
+```text
+Citizen
+   ↕
+Civic Issue
+   ↕
+Vendor Marketplace
+   ↕
+Ministry
+   ↕
+Central Administration
+   ↕
+Financial Disbursement
+```
+
+---
+
+# 📊 Why CivicTrack?
+
+| Traditional Approach          | CivicTrack                       |
+| ----------------------------- | -------------------------------- |
+| Complaint-focused             | Full lifecycle management        |
+| Limited visibility            | End-to-end tracking              |
+| Manual vendor selection       | Competitive bidding              |
+| Weak completion verification  | Multi-stage verification         |
+| Limited vendor accountability | Two-strike governance            |
+| Scattered records             | Centralized audit history        |
+| Separate financial process    | Integrated disbursement workflow |
+| Citizen reports only          | Citizen report + confirmation    |
+
+---
+
+# 👨‍💻 Contributors
+
+### CivicTrack Team
+
+Built for **Smart India Hackathon**.
+
+> Add your team members, roles, GitHub profiles, and LinkedIn profiles here.
+
+| Member      | Role                      |
+| ----------- | ------------------------- |
+| Your Name   | Full Stack / Project Lead |
+| Team Member | Backend                   |
+| Team Member | Frontend                  |
+| Team Member | Database / Analytics      |
+
+---
+
+# 📄 License
+
+This project is developed for educational, hackathon, and demonstration purposes.
+
+Add your preferred license here, for example:
+
+```text
+MIT License
+```
+
+---
+
+# ⭐ Support the Project
+
+If you find CivicTrack interesting:
+
+⭐ Star the repository
+🍴 Fork the project
+🐛 Report issues
+💡 Suggest improvements
+🤝 Contribute to the project
+
+---
+
+<p align="center">
+  <strong>🏛️ CivicTrack — Making Civic Governance More Transparent, Accountable & Citizen-Centric.</strong>
+</p>
+
+<p align="center">
+  Built with ❤️ using React, Node.js, Express & MySQL
+</p>
