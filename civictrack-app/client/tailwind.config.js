@@ -5,7 +5,17 @@ export default {
     './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        govblue: '#003087',
+        govoffwhite: '#F7FAFC',
+        govred: '#D32F2F',
+        govgray: '#A0AEC0',
+      },
+      fontFamily: {
+        sans: ['Inter', 'Arial', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 };

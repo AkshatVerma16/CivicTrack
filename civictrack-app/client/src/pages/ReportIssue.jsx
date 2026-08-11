@@ -27,12 +27,17 @@ export default function ReportIssue() {
         setSubmitting(false)
         return
       }
+      if (!coords.lat || !coords.lng) {
+        setMessage('Location is required. Please allow location access and try again.')
+        setSubmitting(false)
+        return
+      }
       const form = new FormData()
       // demo user id 1; in real app derive from auth/session
       form.append('user_id', '1')
       form.append('description', description)
-      if (coords.lat) form.append('latitude', String(coords.lat))
-      if (coords.lng) form.append('longitude', String(coords.lng))
+      form.append('latitude', String(coords.lat))
+      form.append('longitude', String(coords.lng))
       if (photo) form.append('photo', photo)
       const res = await submitComplaint(form)
       setMessage('Complaint submitted successfully!')
@@ -61,11 +66,11 @@ export default function ReportIssue() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium">Latitude</label>
-              <input value={coords.lat} onChange={e => setCoords(c => ({ ...c, lat: e.target.value }))} className="mt-1 w-full rounded border p-2" placeholder="Auto" />
+              <input value={coords.lat} readOnly className="mt-1 w-full rounded border p-2 bg-gray-100" placeholder="Auto" />
             </div>
             <div>
               <label className="block text-sm font-medium">Longitude</label>
-              <input value={coords.lng} onChange={e => setCoords(c => ({ ...c, lng: e.target.value }))} className="mt-1 w-full rounded border p-2" placeholder="Auto" />
+              <input value={coords.lng} readOnly className="mt-1 w-full rounded border p-2 bg-gray-100" placeholder="Auto" />
             </div>
           </div>
           <button disabled={submitting} className="rounded bg-blue-600 px-4 py-2 font-semibold text-white disabled:opacity-50">{submitting ? 'Submitting...' : 'Submit'}</button>

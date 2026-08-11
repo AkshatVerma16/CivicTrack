@@ -1,0 +1,27 @@
+CREATE TABLE `bids` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `complaint_id` bigint unsigned NOT NULL,
+  `vendor_id` int unsigned NOT NULL,
+  `estimated_time` int NOT NULL,
+  `budget` decimal(12,2) NOT NULL,
+  `status` enum('pending','accepted','rejected') DEFAULT 'pending',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `complaint_id` (`complaint_id`),
+  KEY `vendor_id` (`vendor_id`),
+  CONSTRAINT `bids_ibfk_1` FOREIGN KEY (`complaint_id`) REFERENCES `complaints` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `bids_ibfk_2` FOREIGN KEY (`vendor_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `reported_bids` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `bid_id` int NOT NULL,
+  `ministry_id` int unsigned NOT NULL,
+  `reason` text,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `bid_id` (`bid_id`),
+  KEY `ministry_id` (`ministry_id`),
+  CONSTRAINT `reported_bids_ibfk_1` FOREIGN KEY (`bid_id`) REFERENCES `bids` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `reported_bids_ibfk_2` FOREIGN KEY (`ministry_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

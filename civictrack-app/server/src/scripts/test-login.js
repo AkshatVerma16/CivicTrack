@@ -1,5 +1,5 @@
 const url = 'http://localhost:3000/api/auth/admin/login'
-const body = { email: 'admin@example.com', password: 'secret' }
+const body = { identifier: 'akshat', password: 'Akshat@2004' }
 
 ;(async () => {
   try {

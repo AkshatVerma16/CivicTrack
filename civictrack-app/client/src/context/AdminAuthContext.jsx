@@ -3,11 +3,11 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 const AdminAuthContext = createContext(null)
 
 export function AdminAuthProvider({ children }) {
-  const [token, setToken] = useState(() => localStorage.getItem('admin_token') || '')
+  const [token, setToken] = useState(() => localStorage.getItem('token') || '')
 
   useEffect(() => {
-    if (token) localStorage.setItem('admin_token', token)
-    else localStorage.removeItem('admin_token')
+    if (token) localStorage.setItem('token', token)
+    else localStorage.removeItem('token')
   }, [token])
 
   const value = useMemo(() => ({ token, setToken, isAuthed: Boolean(token) }), [token])
